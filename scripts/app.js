@@ -4,43 +4,34 @@ const gameData = [
   [0, 0, 0],
 ];
 
-let editedPlayer = 0;
 let activePlayer = 0;
 let currentRound = 1;
-let gameIsOver = false;
+// true until the first game starts, so renaming a player does not overwrite the start hint
+let gameIsOver = true;
 
 const players = [
   {
-    name: "",
+    name: "Player 1",
     symbol: "X",
   },
   {
-    name: "",
+    name: "Player 2",
     symbol: "O",
   },
 ];
 
-const playerConfigOverlayElement = document.getElementById("config-overlay");
-const backdropElement = document.getElementById("backdrop");
-const formElement = document.querySelector("form");
-const errorsOutputElement = document.getElementById("config-errors");
 const gameAreaElement = document.getElementById("active-game");
-const activePlayerNameElement = document.getElementById("active-player-name");
-const gameOverElement = document.getElementById('game-over')
-
-const editPlayer1BtnElement = document.getElementById("edit-player-1-btn");
-const editPlayer2BtnElement = document.getElementById("edit-player-2-btn");
-const cancelConfigBtnElement = document.getElementById("cancel-config-btn");
+const statusElement = document.getElementById("game-status");
+const playerElements = document.querySelectorAll(".player");
+const playerNameInputElements = document.querySelectorAll(".player input");
 const startNewGameBtnElement = document.getElementById("start-game-btn");
-const gameFieldElements = document.querySelectorAll("#game-board li");
+const gameFieldElements = document.querySelectorAll("#game-board button");
+const strikeLineElement = document.getElementById("strike-line");
 
-editPlayer1BtnElement.addEventListener("click", openPlayerConfig);
-editPlayer2BtnElement.addEventListener("click", openPlayerConfig);
+for (const playerNameInputElement of playerNameInputElements) {
+  playerNameInputElement.addEventListener("input", updatePlayerName);
+}
 
-cancelConfigBtnElement.addEventListener("click", closePlayerConfig);
-backdropElement.addEventListener("click", closePlayerConfig);
-
-formElement.addEventListener("submit", savePlayerConfig);
 startNewGameBtnElement.addEventListener("click", startNewGame);
 
 for (const gameFieldElement of gameFieldElements) {

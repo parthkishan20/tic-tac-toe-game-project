@@ -1,59 +1,165 @@
-#active-game {
+.game {
+  display: grid;
+  justify-items: center;
+  gap: 1.5rem;
+}
+
+.game[data-turn="X"] {
+  --turn-mark: "X";
+  --turn-color: var(--ink);
+}
+
+.game[data-turn="O"] {
+  --turn-mark: "O";
+  --turn-color: var(--accent);
+}
+
+.status {
+  margin: 0;
+  min-height: 1.3em;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.2vw, 2.125rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
   text-align: center;
-  margin: 2rem 0 5rem 0;
-  display: none;
+  text-wrap: balance;
+  animation: rise 0.5s var(--ease) backwards;
 }
 
-#game-over {
-  width: 90%;
-  max-width: 40rem;
-  margin: auto;
-  padding: 1rem 2rem;
-  background-color: rgb(50, 5, 87);
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  display: none;
-}
-
-#game-over h2 {
-  font-size: 2.5rem;
-  margin: 0.5rem 0;
-}
-
-#active-player-name {
-  font-weight: bold;
-  color: rgb(50, 5, 87);
+.board {
+  --pad: clamp(0.5rem, 1.6vw, 0.8rem);
+  position: relative;
+  width: min(100%, 30rem);
 }
 
 #game-board {
   list-style: none;
-  margin: 1rem 0;
-  padding: 0;
+  aspect-ratio: 1;
+  margin: 0;
+  padding: var(--pad);
   display: grid;
-  grid-template-columns: repeat(3, 6rem);
-  grid-template-rows: repeat(3, 6rem);
-  justify-content: center;
-  gap: 0.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: var(--pad);
+  border-radius: 1.75rem;
+  background-color: var(--tray);
+  box-shadow: 0 40px 70px -40px rgb(var(--shadow) / 0.45);
 }
 
+/* --d is the cell's diagonal distance from the top-left, set in index.html */
 #game-board li {
-  background-color: rgb(215, 187, 247);
-  border-radius: 2px;
-  cursor: pointer;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2.5rem;
-  font-weight: bold;
+  animation: rise 0.8s calc(0.3s + var(--d) * 70ms) var(--ease) backwards;
 }
 
-#game-board li:hover {
-  background-color: rgb(112, 13, 204);
+#game-board button {
+  width: 100%;
+  border: 0;
+  border-radius: 1.1rem;
+  background-color: var(--cell);
+  box-shadow: 0 1px 2px rgb(var(--shadow) / 0.1);
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 10vw, 4.75rem);
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, transform 0.2s var(--ease), opacity 0.3s;
+  animation: ripple 0.5s calc(var(--d) * 60ms) var(--ease) backwards;
 }
 
-#game-board li.disabled {
-  background-color: rgb(112, 13, 204);
-  color: white;
+@keyframes ripple {
+  from {
+    transform: scale(0.85);
+    opacity: 0.2;
+  }
+}
+
+/* before the first game */
+#game-board button:disabled {
+  opacity: 0.6;
+}
+
+#game-board button:disabled,
+#game-board .mark-x,
+#game-board .mark-o,
+.is-over #game-board button {
   cursor: default;
+}
+
+.game:not(.is-over) #game-board button:enabled:not(.mark-x, .mark-o):hover {
+  background-color: var(--accent-soft);
+  transform: translateY(-2px);
+}
+
+/* faint preview of the mark the current player would place */
+.game:not(.is-over) #game-board button:enabled:not(.mark-x, .mark-o):hover::after {
+  content: var(--turn-mark);
+  color: var(--turn-color);
+  opacity: 0.3;
+}
+
+.game:not(.is-over) #game-board button:enabled:not(.mark-x, .mark-o):active {
+  transform: scale(0.97);
+}
+
+#game-board .mark-x::after {
+  content: "X";
+}
+
+#game-board .mark-o::after {
+  content: "O";
+}
+
+/* the mark is written on from left to right */
+#game-board .mark-x::after,
+#game-board .mark-o::after {
+  display: inline-block;
+  clip-path: inset(-20%);
+  animation: ink 0.5s var(--ease) backwards;
+}
+
+@keyframes ink {
+  from {
+    clip-path: inset(-20% 100% -20% -20%);
+    opacity: 0.4;
+  }
+}
+
+#game-board .win {
+  background-color: var(--ink);
+  color: var(--paper);
+}
+
+#game-board:has(.win) button:not(.win) {
+  opacity: 0.45;
+}
+
+/* line through the winning cells; endGame() sets its ends in cell units */
+.strike {
+  position: absolute;
+  top: var(--pad);
+  left: var(--pad);
+  width: calc(100% - 2 * var(--pad));
+  height: calc(100% - 2 * var(--pad));
+  overflow: visible;
+  pointer-events: none;
+  display: none;
+}
+
+#game-board:has(.win) + .strike {
+  display: block;
+}
+
+.strike line {
+  stroke: var(--accent);
+  stroke-width: 0.07;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  animation: strike 0.5s 0.3s var(--ease) backwards;
+}
+
+@keyframes strike {
+  from {
+    stroke-dashoffset: 1;
+  }
 }

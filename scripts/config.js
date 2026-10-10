@@ -1,33 +1,11 @@
-function openPlayerConfig(event) {
-  editedPlayer = +event.target.dataset.playerid;
+function updatePlayerName(event) {
+  const inputElement = event.target;
+  const playerIndex = inputElement.dataset.playerid - 1;
 
-  playerConfigOverlayElement.style.display = "block";
-  backdropElement.style.display = "block";
-}
+  // an empty field falls back to the default name shown as the placeholder
+  players[playerIndex].name = inputElement.value.trim() || inputElement.placeholder;
 
-function closePlayerConfig() {
-  playerConfigOverlayElement.style.display = "none";
-  backdropElement.style.display = "none";
-  formElement.firstElementChild.classList.remove("error");
-  errorsOutputElement.textContent = "";
-  formElement.firstElementChild.lastElementChild.value = ''
-}
-
-function savePlayerConfig(event) {
-  event.preventDefault();
-  const formData = new FormData(event.target);
-  const enteredPlayername = formData.get("playername").trim();
-  if (!enteredPlayername) {
-    event.target.firstElementChild.classList.add("error");
-    errorsOutputElement.textContent = "Please enter valid name!";
-    return;
+  if (!gameIsOver && playerIndex === activePlayer) {
+    showActivePlayer();
   }
-  const updatedPlayerDataElement = document.getElementById(
-    "player-" + editedPlayer + "-data"
-  );
-  updatedPlayerDataElement.children[1].textContent = enteredPlayername;
-
-  players[editedPlayer - 1].name = enteredPlayername;
-
-  closePlayerConfig();
 }

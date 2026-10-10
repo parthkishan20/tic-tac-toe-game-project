@@ -1,42 +1,177 @@
-body {
-  margin: 0;
-  font-family: 'Open-Sans', sans-serif;
-  color: rgb(44, 41, 44);
-  background-color: rgb(247, 239, 247);
+:root {
+  color-scheme: light dark;
+  --paper: #f3eee4;
+  --tray: #e6ddcc;
+  --cell: #fbf8f2;
+  --ink: #1f1b16;
+  --muted: #6e6458;
+  --line: #d9cfbe;
+  --accent: #b5552a;
+  --accent-soft: #f1ddd0;
+  --shadow: 60 40 20;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Geist", system-ui, sans-serif;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-#main-header {
-  background-color: rgb(140, 0, 255);
-  color: white;
-  padding: 2rem 5%;
-  text-align: center;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #171512;
+    --tray: #23201b;
+    --cell: #2d2923;
+    --ink: #f1ebe0;
+    --muted: #a39a8c;
+    --line: #3b352d;
+    --accent: #e27c4c;
+    --accent-soft: #3e2a1f;
+    --shadow: 0 0 0;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* paper grain, behind all content */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.shell {
+  max-width: 72rem;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 4.5rem) clamp(1rem, 5vw, 4rem) clamp(2.5rem, 7vw, 5.5rem);
+  display: grid;
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 5rem);
+}
+
+@media (min-width: 56rem) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  }
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+
+h1 {
+  margin: 0.75rem 0 1.25rem;
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 9vw, 5.75rem);
+  font-weight: 600;
+  font-variation-settings: "opsz" 144;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+}
+
+.lede {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.mark-x {
+  color: var(--ink);
+}
+
+.mark-o {
+  color: var(--accent);
 }
 
 .btn {
-font: inherit;
-padding: 0.5rem 1.5rem;
-background-color: rgb(140, 0, 255) ;
-border: 1px solid rgb(140, 0, 255);
-color: white;
-border-radius: 4px;
-cursor: pointer;
-
+  font: inherit;
+  font-weight: 500;
+  padding: 0.85rem 1.6rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background-color: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+  box-shadow: 0 10px 24px -12px rgb(var(--shadow) / 0.6);
+  transition: background-color 0.2s, transform 0.2s var(--ease), box-shadow 0.2s;
 }
 
-.btn-alt {
-
-  background-color: transparent;
-  border-color: transparent;
-  color: rgb(140, 0, 255);
-
+.btn:hover {
+  background-color: color-mix(in srgb, var(--ink) 82%, var(--accent));
+  transform: translateY(-1px);
 }
 
-.btn:hover{
-  background-color: rgb(79, 10, 190);
-  border-color: rgb(79, 10, 190);
+.btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: none;
 }
 
-.btn-alt:hover{
-  background-color: rgb(245, 232, 255);
-  border-color: transparent;
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* page entrance: each block rises in a little after the one before */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.setup header > *,
+.player,
+#start-game-btn {
+  animation: rise 0.8s var(--ease) backwards;
+}
+
+.setup h1 {
+  animation-delay: 0.08s;
+}
+
+.lede {
+  animation-delay: 0.16s;
+}
+
+.player:nth-child(1) {
+  animation-delay: 0.24s;
+}
+
+.player:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+#start-game-btn {
+  animation-delay: 0.36s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

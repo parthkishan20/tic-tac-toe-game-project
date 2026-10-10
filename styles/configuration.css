@@ -1,81 +1,77 @@
-#config-overlay {
+.players {
+  list-style: none;
+  max-width: 28rem;
+  margin: 2.5rem 0 2rem;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.player {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.75rem 1fr;
+  column-gap: 1rem;
+  align-items: center;
+  padding: 1rem 0 1.15rem;
+  border-bottom: 1px solid var(--line);
+  transition: box-shadow 0.2s;
+}
+
+/* marks whose turn it is */
+.player::before {
+  content: "";
+  position: absolute;
+  left: -0.875rem;
+  top: 1rem;
+  bottom: 1rem;
+  width: 3px;
+  border-radius: 3px;
+  background-color: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.3s var(--ease);
+}
+
+.player.is-active::before {
+  transform: scaleY(1);
+}
+
+.player:focus-within {
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.player-mark {
+  grid-row: span 2;
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 500;
+  line-height: 1;
   text-align: center;
 }
 
-#config-overlay h2{
-margin: 0.5rem 0;
-
+.player label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted);
 }
 
-.form-control {
-  margin: 0.5rem 0;
-
-}
-
-.form-control label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-
-.form-control input {
+.player input {
+  width: 100%;
+  padding: 0.15rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   font: inherit;
-  border: 1px solid rgb(204, 204, 204);
-  width: 15rem;
-  padding: 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--ink);
 }
 
-.error input {
-  border-color: rgb(136, 2, 2);
-  color: rgb(136, 2, 2);
-  background-color: rgb(253, 219, 219);
-  
+.player input::placeholder {
+  color: var(--ink);
+  opacity: 0.4;
 }
 
-.error label {
-  color: rgb(136, 2, 2);
-}
-
-#game-configuration {
-  width: 90%;
- max-width: 40rem;
- margin: 3rem auto;
- text-align: center;
-}
-
-#game-configuration ol {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-
-#game-configuration li {
-  margin:  1rem;
-  padding: 1rem;
-  width: 50%;
-  background-color: rgb(243, 227, 255);
-  border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-
-}
-
-#game-configuration h2 {
-  font-size: 1rem;
-  margin: 0.5rem;
-
-}
-
-#game-configuration h3{
-  font-size: 1.5rem;
-  margin: 1.5rem 0;
-  color: rgb(94, 4, 168);
-
-}
-
-.player-symbol {
-  font-size: 2rem;
-  font-weight: bold;
-  color: rgb(47, 4, 82);
-  margin: 0.5rem 0;
+/* the row's underline shows focus instead */
+.player input:focus-visible {
+  outline: none;
 }

@@ -3,14 +3,15 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tic Tac Toe</title>
+  <meta name="description" content="Two-player tic tac toe for one screen. Name the players and take turns.">
+  <meta name="theme-color" content="#f3eee4">
+  <title>Tic tac toe</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f1b16'/%3E%3Ccircle cx='16' cy='16' r='7.5' fill='none' stroke='%23d06a3a' stroke-width='4'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Geist:wght@400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/styles.css">
-  <link rel="stylesheet" href="styles/overlays.css">
   <link rel="stylesheet" href="styles/configuration.css">
   <link rel="stylesheet" href="styles/game.css">
   <script src="scripts/config.js" defer></script>
@@ -19,76 +20,54 @@
 </head>
 
 <body>
-  
-  <div id="backdrop"></div>
-  
-  <header id="main-header">
-    <h1>Play Tic, Tac, Toe</h1>
-    <p>Built with HTML, CSS, JavaScript and - of course - lots of love!</p>
-  </header>
-  
-  <main>
-  
-    <aside class="modal" id="config-overlay">
-      <h2>Choose your name</h2>
+  <main class="shell">
 
-      <form>
-        <div class="form-control">
-          <label for="playername" >player name</label>
-          <input type="text" name="playername" id="playername" required>
-        </div>
-        <p id="config-errors"></p>
-        <div>
-          <button type="reset" class="btn btn-alt" id="cancel-config-btn">Cancel</button>
-          <button type="submit" class="btn">Confirm</button>
-        </div>
-      </form>
-    </aside>
+    <section class="setup">
+      <header>
+        <p class="eyebrow">Two players, one screen</p>
+        <h1>Tic tac toe</h1>
+        <p class="lede">Name the players, start a game and take turns on the board. Three in a row wins.</p>
+      </header>
 
-    <section id="game-configuration">
-      <ol>
-        <li>
-          <article id="player-1-data">
-            <h2>Player 1</h2>
-            <h3>Player Name</h3>
-            <p class="player-symbol">X</p>
-            <button class="btn btn-alt" id="edit-player-1-btn" data-playerid="1">Edit</button>
-          </article>
+      <ol class="players">
+        <li class="player">
+          <span class="player-mark mark-x" aria-hidden="true">X</span>
+          <label for="player-1-name">Player 1 plays X</label>
+          <input id="player-1-name" data-playerid="1" placeholder="Player 1" maxlength="20" autocomplete="off" spellcheck="false">
         </li>
-        <li>
-          <article id="player-2-data">
-            <h2>Player 2</h2>
-            <h3>Player Name</h3>
-            <p class="player-symbol">O</p>
-            <button class="btn btn-alt" id="edit-player-2-btn" data-playerid="2">Edit</button>
-          </article>
+        <li class="player">
+          <span class="player-mark mark-o" aria-hidden="true">O</span>
+          <label for="player-2-name">Player 2 plays O</label>
+          <input id="player-2-name" data-playerid="2" placeholder="Player 2" maxlength="20" autocomplete="off" spellcheck="false">
         </li>
       </ol>
-      <button class="btn" id="start-game-btn">Start New Game</button>
+
+      <button class="btn" id="start-game-btn">Start game</button>
     </section>
 
-    <section id="active-game">
-      <article id="game-over">
-        <h2>You won, <span id="winner-name">player name</span>!</h2>
-        <p>Click "start new game" above, to start a new game</p>
-      </article>
+    <section class="game" id="active-game" aria-label="Game board">
+      <p class="status" id="game-status" aria-live="polite">Press start game to begin</p>
 
-      <p>It's your turn <span id="active-player-name">Player Name</span>!</p>
+      <div class="board">
+        <ol id="game-board">
+          <li style="--d: 0"><button data-row="1" data-col="1" disabled></button></li>
+          <li style="--d: 1"><button data-row="1" data-col="2" disabled></button></li>
+          <li style="--d: 2"><button data-row="1" data-col="3" disabled></button></li>
 
-      <ol id="game-board">
-        <li data-row="1"  data-col="1"></li>
-        <li data-row="1"  data-col="2"></li>
-        <li data-row="1"  data-col="3"></li>
-   
-        <li data-row="2"  data-col="1"></li>
-        <li data-row="2"  data-col="2"></li>
-        <li data-row="2"  data-col="3"></li>
+          <li style="--d: 1"><button data-row="2" data-col="1" disabled></button></li>
+          <li style="--d: 2"><button data-row="2" data-col="2" disabled></button></li>
+          <li style="--d: 3"><button data-row="2" data-col="3" disabled></button></li>
 
-        <li data-row="3"  data-col="1"></li>
-        <li data-row="3"  data-col="2"></li>
-        <li data-row="3"  data-col="3"></li>
-      </ol>
+          <li style="--d: 2"><button data-row="3" data-col="1" disabled></button></li>
+          <li style="--d: 3"><button data-row="3" data-col="2" disabled></button></li>
+          <li style="--d: 4"><button data-row="3" data-col="3" disabled></button></li>
+        </ol>
+        <svg class="strike" viewBox="0 0 3 3" aria-hidden="true">
+          <line id="strike-line" pathLength="1" />
+        </svg>
+      </div>
     </section>
+
   </main>
 </body>
 
